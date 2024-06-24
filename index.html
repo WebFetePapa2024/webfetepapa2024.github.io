@@ -80,6 +80,23 @@
             background-position: center;
             pointer-events: none;
         }
+        .intro {
+            position: absolute;
+            background-color: white;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .title {
+            top: 50%;
+            left: 50%;
+            font-size: 25px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -90,6 +107,9 @@
     <img id="layer2" class="layer" src="wrapping2.png">
     <img id="layer1" class="layer" src="wrapping1.png">
     <div id="swipe" class="swipe blink_me"></div>
+    <div id="intro" class="intro">
+        <button id="introButton" class="title" type="button">Ouvrir le cadeau!</button>
+    </div>
 
     <audio id="introSound" src="cueintro.mp3"></audio>
     <audio id="sound1" src="cue1.mp3"></audio>
@@ -104,6 +124,14 @@
                 audioContext.resume();
             }
         }, { once: true });
+    
+        
+        document.getElementById("introButton").addEventListener("click", () => {
+            document.getElementById("intro").style.display = 'none';
+            setTimeout(() => {
+                document.getElementById("introSound").play();
+            }, 100); // Adding a small delay
+        });
 
         const layers = [
             { id: 'layer1', direction: 'right', sound: 'sound1', played: false },
