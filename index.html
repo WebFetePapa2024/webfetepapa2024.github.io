@@ -47,7 +47,12 @@
     <audio id="sound4" src="cue4.mp3"></audio>
 
     <script>
-        document.getElementById('introSound').play();
+        document.addEventListener('touchstart', () => {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }, { once: true });
 
         const layers = [
             { id: 'layer1', direction: 'right', sound: 'sound1', played: false },
