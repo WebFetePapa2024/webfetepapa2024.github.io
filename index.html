@@ -85,7 +85,9 @@
                 initialY = element.offsetTop;
 
                 if (!layer.played) {
-                    document.getElementById(layer.sound).play();
+                    setTimeout(() => {
+                        document.getElementById(layer.sound).play();
+                    }, 1000); // Adding a small delay
                     layer.played = true;
                 }
             }
