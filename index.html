@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Birthday Present</title>
     <style>
+        .blink_me {
+            animation: blinker 1s linear infinite;
+        }
+
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+        
         body, html {
             margin: 0;
             padding: 0;
@@ -31,6 +41,18 @@
             background-repeat: no-repeat;
             background-position: center;
         }
+        .swipe {
+            position: absolute;
+            background-image: url('swipe.png');
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -39,6 +61,7 @@
     <img id="layer3" class="layer" src="wrapping3.png">
     <img id="layer2" class="layer" src="wrapping2.png">
     <img id="layer1" class="layer" src="wrapping1.png">
+    <div id="swipe" class="swipe blink_me"></div>
 
     <audio id="introSound" src="cueintro.mp3"></audio>
     <audio id="sound1" src="cue1.mp3"></audio>
@@ -110,19 +133,16 @@
                 if (layer.direction === 'up') {
                     const newY = Math.min(initialY + deltaY, initialY);
                     element.style.top = `${newY}px`;
-                    if (deltaY < -window.innerHeight) removeLayer(index);
                 } else if (layer.direction === 'down') {
                     const newY = Math.max(initialY + deltaY, initialY);
                     element.style.top = `${newY}px`;
-                    if (deltaY > window.innerHeight) removeLayer(index);
                 } else if (layer.direction === 'left') {
                     const newX = Math.min(initialX + deltaX, initialX);
                     element.style.left = `${newX}px`;
-                    if (deltaX < -window.innerWidth) removeLayer(index);
                 } else if (layer.direction === 'right') {
                     const newX = Math.max(initialX + deltaX, initialX);
                     element.style.left = `${newX}px`;
-                    if (deltaX > window.innerWidth) removeLayer(index);
+                    document.getElementById("swipe").style.display = 'none';
                 }
             }
 
@@ -131,11 +151,6 @@
                 document.removeEventListener('mouseup', endDrag);
                 document.removeEventListener('touchmove', drag);
                 document.removeEventListener('touchend', endDrag);
-            }
-
-            function removeLayer(index) {
-                const element = document.getElementById(layers[index].id);
-                element.style.display = 'none';
             }
         });
     </script>
