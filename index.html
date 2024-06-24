@@ -12,7 +12,7 @@
             width: 100%;
             height: 100%;
         }
-        .layerx {
+        .layer {
             position: absolute;
             top: 0;
             left: 0;
@@ -21,38 +21,39 @@
             background-size: cover;
             background-position: center;
         }
-        .layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        #layer1 {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
         .gift {
             background-image: url('gift.png');
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         }
     </style>
 </head>
 <body>
-    <img id="layer4" class="layer" src="wrapping4.png"></div>
-    <img id="layer3" class="layer" src="wrapping3.png"></div>
-    <img id="layer2" class="layer" src="wrapping2.png"></div>
-    <img id="layer1" class="layer" src="wrapping1.png"></div>
-    <!--<div class="layer gift"></div>-->
+    <div class="gift"></div>
+    <img id="layer4" class="layer" src="wrapping4.png">
+    <img id="layer3" class="layer" src="wrapping3.png">
+    <img id="layer2" class="layer" src="wrapping2.png">
+    <img id="layer1" class="layer" src="wrapping1.png">
+
+    <audio id="introSound" src="cueintro.mp3"></audio>
+    <audio id="sound1" src="cue1.mp3"></audio>
+    <audio id="sound2" src="cue2.mp3"></audio>
+    <audio id="sound3" src="cue3.mp3"></audio>
+    <audio id="sound4" src="cue4.mp3"></audio>
 
     <script>
+        document.getElementById('introSound').play();
+
         const layers = [
-            { id: 'layer1', direction: 'right' },
-            { id: 'layer2', direction: 'left' },
-            { id: 'layer3', direction: 'up' },
-            { id: 'layer4', direction: 'down' }
+            { id: 'layer1', direction: 'right', sound: 'sound1', played: false },
+            { id: 'layer2', direction: 'left', sound: 'sound2', played: false },
+            { id: 'layer3', direction: 'up', sound: 'sound3', played: false },
+            { id: 'layer4', direction: 'down', sound: 'sound4', played: false }
         ];
 
         layers.forEach((layer, index) => {
@@ -77,6 +78,11 @@
                 }
                 initialX = element.offsetLeft;
                 initialY = element.offsetTop;
+
+                if (!layer.played) {
+                    document.getElementById(layer.sound).play();
+                    layer.played = true;
+                }
             }
 
             function drag(e) {
@@ -91,21 +97,25 @@
                     currentY = e.touches[0].clientY;
                 }
 
-                let deltaX = currentX - startX;
-                let deltaY = currentY - startY;
+                const deltaX = currentX - startX;
+                const deltaY = currentY - startY;
 
                 if (layer.direction === 'up') {
                     const newY = Math.min(initialY + deltaY, initialY);
                     element.style.top = `${newY}px`;
+                    if (deltaY < -window.innerHeight) removeLayer(index);
                 } else if (layer.direction === 'down') {
                     const newY = Math.max(initialY + deltaY, initialY);
                     element.style.top = `${newY}px`;
+                    if (deltaY > window.innerHeight) removeLayer(index);
                 } else if (layer.direction === 'left') {
                     const newX = Math.min(initialX + deltaX, initialX);
                     element.style.left = `${newX}px`;
+                    if (deltaX < -window.innerWidth) removeLayer(index);
                 } else if (layer.direction === 'right') {
                     const newX = Math.max(initialX + deltaX, initialX);
                     element.style.left = `${newX}px`;
+                    if (deltaX > window.innerWidth) removeLayer(index);
                 }
             }
 
